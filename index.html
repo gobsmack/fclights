@@ -61,19 +61,24 @@ var symbol = {
   var g1 = new Graphic({
     geometry: point,   // Add the geometry created in step 4
     symbol: symbol,   // Add the symbol created in step 5
-    attributes: atts   // Add the attributes created in step 6
+    attributes: atts,   // Add the attributes created in step 6
+popupTemplate: {
+      title: "{Name}",
+      content: [{
+        type: "fields",
+        fieldInfos: [{
+          fieldName: "Name"
+        }, {
+          fieldName: "Owner"
+        }, {
+          fieldName: "Length"
+        }]
+      }]
+    }
   });
-g1.popupTemplate = new PopupTemplate({
-  title: "Results title",
-  content: "Name: {Name}, Owner: {Owner}"
-});
-
-var graphics = [g1];
-view.popup.features = graphics;
-  
   // Add the graphic to the view's default graphics view
   // If adding multiple graphics, use addMany and pass in the array of graphics.
-  //view.graphics.add(graphic);
+  view.graphics.add(graphic);
 
 
 view.on("click", function(event) {
