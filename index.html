@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Intro to MapView - Create a 2D map</title>
+<title>Forest Creek Lights</title>
 <style>
   html, body, #viewDiv {
     padding: 0;
@@ -29,6 +29,7 @@ require([
     zoom: 15,  // Sets zoom level based on level of detail (LOD)
     center: [-97.605682, 30.507881]  // Sets center point of view using longitude,latitude
   });
+  view.watch("extent", function(newValue, oldValue) {console.log(newValue);});
 });
 </script>
 </head>
