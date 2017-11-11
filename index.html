@@ -26,10 +26,9 @@ require([
   var view = new MapView({
     container: "viewDiv",  // Reference to the scene div created in step 5
     map: map,  // Reference to the map object created before the scene
-    zoom: 15,  // Sets zoom level based on level of detail (LOD)
+    zoom: 18,  // Sets zoom level based on level of detail (LOD)
     center: [-97.605682, 30.507881]  // Sets center point of view using longitude,latitude
   });
-  view.watch("extent", function(newValue, oldValue) {console.log(newValue);});
 });
 </script>
 </head>
