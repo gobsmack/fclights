@@ -30,7 +30,6 @@ require([
     zoom: 17,  // Sets zoom level based on level of detail (LOD)
     center: [-97.605682, 30.507881]  // Sets center point of view using longitude,latitude
   });
-});
   
   
   // Create a line geometry with the coordinates of the line
@@ -68,6 +67,7 @@ var symbol = {
   // Add the graphic to the view's default graphics view
   // If adding multiple graphics, use addMany and pass in the array of graphics.
   view.graphics.add(graphic);
+});
 
   </script>
 </head>
