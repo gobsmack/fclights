@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Forest Creek Lights</title>
-<style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Forest Creek Lights</title>
+  <style>
   html, body, #viewDiv {
     padding: 0;
     margin: 0;
@@ -15,93 +16,88 @@
 <link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
 <script src="https://js.arcgis.com/4.5/"></script>
 <script>
-require([
-  "esri/Map",
-  "esri/views/MapView",
-  "esri/Graphic",  
-  "dojo/domReady!"
-], function(Map, MapView, Graphic){
-  var map = new Map({
-    basemap: "hybrid"
-  });
-  var view = new MapView({
-    container: "viewDiv",  // Reference to the scene div created in step 5
-    map: map,  // Reference to the map object created before the scene
-    zoom: 17,  // Sets zoom level based on level of detail (LOD)
-    center: [-97.605682, 30.507881]  // Sets center point of view using longitude,latitude
-  });
-  
-  
-  // Create a line geometry with the coordinates of the line
-  var point = {
-    type: "point",
-    x: -97.605682,
-    y: 30.507881
-  };
+  require([
+    "esri/Map",
+    "esri/views/MapView",
+    "esri/Graphic",
+    "esri/widgets/BasemapToggle",
+    "dojo/domReady!"
+  ], function (Map, MapView, Graphic, BasemapToggle) {
 
-var symbol = {
-  type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
-  style: "square",
-  color: "blue",
-  size: "8px",  // pixels
-  outline: {  // autocasts as new SimpleLineSymbol()
-    color: [ 255, 255, 0 ],
-    width: 3  // points
-  }
-};
-  
-  // Create a simple object containing useful information relating to the feature
-  var atts = {
-    Name: "Sample Point",  
-    Owner: "Test"
-  };
-  
-
-  // Create the graphic
-  var g1 = new Graphic({
-    geometry: point,   // Add the geometry created in step 4
-    symbol: symbol,   // Add the symbol created in step 5
-    attributes: atts,   // Add the attributes created in step 6
-popupTemplate: {
-      title: "{Name}",
-      content: [{
-        type: "fields",
-        fieldInfos: [{
-          fieldName: "Name"
-        }, {
-          fieldName: "Owner"
-        }, {
-          fieldName: "Length"
-        }]
-      }]
-    }
-  });
-  // Add the graphic to the view's default graphics view
-  // If adding multiple graphics, use addMany and pass in the array of graphics.
-  view.graphics.add(graphic);
-
-
-view.on("click", function(event) {
-    event.stopPropagation();
-
-    // Get the coordinates of the click on the view
-    // around the decimals to 3 decimals
-    var lat = Math.round(event.mapPoint.latitude * 1000) / 1000;
-    var lon = Math.round(event.mapPoint.longitude * 1000) / 1000;
-
-    view.popup.open({
-        // Set the popup's title to the coordinates of the clicked location
-        title: "Location: [" + lon + ", " + lat + "]",
-        location: event.mapPoint // Set the location of the popup to the clicked location
-        content: "No address was found for this location"
+    var map = new Map({
+      basemap: "osm"
     });
-});
-  
-});
 
-  </script>
+    var view = new MapView({
+      container: "viewDiv",  // Reference to the scene div created in step 5
+      map: map,  // Reference to the map object created before the scene
+      zoom: 15,  // Sets zoom level based on level of detail (LOD)
+      center: [-97.600682, 30.512881]  // Sets center point of view using longitude,latitude
+    });
+
+    var basemapToggle = new BasemapToggle({
+      view: view,  // The view that provides access to the map's "streets" basemap
+      nextBasemap: "satellite"  // Allows for toggling to the "hybrid" basemap
+    });
+
+    basemapToggle.on('toggle', function (event) {
+      console.log("current basemap title: ", event.current.title);
+      console.log("previous basemap title: ", event.previous.title);
+    });
+
+    createGraphic = function (x, y, title, desc, img) {
+
+      formatImage = function (value, key, data) {
+        var result = "images/" + value;
+        return "<a href='" + result + "' target=_blank><img src='" + result + "' style='width:300px; height: auto;' /></a>";
+      };
+
+      // Create the graphic
+      var graphic = new Graphic({
+        symbol: {
+          type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
+          style: "diamond",
+          color: "green",
+          size: "18px",  // pixels
+          outline: {  // autocasts as new SimpleLineSymbol()
+            color: "red",
+            width: 3  // points
+          }
+        },
+        popupTemplate: {
+          title: "{Title}",
+          content: "<p>{Desc}</p><p>{Image:formatImage}</p>"
+        },
+        geometry: {
+          type: "point",
+          x: x,
+          y: y
+        },
+        attributes: {
+          Title: title,
+          Desc: desc,
+          Image: img
+        }
+      });
+
+      return graphic;
+    }
+
+    var graphic = createGraphic(-97.605682, 30.507881, "123 Main St", "This is the best light display you can image. The Griswold family impresses every year.", "sample.jpg");
+
+    // Add the graphic to the view's default graphics view
+    // If adding multiple graphics, use addMany and pass in the array of graphics.
+    view.graphics.add(graphic);
+
+    view.ui.add(basemapToggle, "top-right");
+
+  });
+
+</script>
 </head>
+
 <body>
   <div id="viewDiv"></div>
 </body>
+
 </html>
