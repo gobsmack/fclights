@@ -1,0 +1,26 @@
+{
+    "features": [{
+        "geometry": {
+            "coordinates": [-97.605682, 30.507881]
+        },
+        "marker": "2017 Winner",
+        "title": "123 Main St",
+        "desc": "This is the best light display you can image. The Griswold family impresses every year.",
+        "image": "sample.jpg"
+    }, {
+        "geometry": {
+            "coordinates": [-97.605682, 30.507881]
+        },
+        "marker": "Hall of Fame",
+        "title": "123 Main St",
+        "desc": "This is the best light display you can image. The Griswold family impresses every year.",
+        "image": "sample.jpg"
+    }, {
+        "geometry": {
+            "coordinates": [-97.606682, 30.508881]
+        },
+        "marker": "",
+        "title": "456 Some St",
+        "desc": "This is just a regular display with no photo."
+    }]
+}

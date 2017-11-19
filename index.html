@@ -1,103 +1,243 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Forest Creek Lights</title>
   <style>
-  html, body, #viewDiv {
-    padding: 0;
-    margin: 0;
-    height: 100%;
-    width: 100%;
+    html, body, #viewDiv {
+      padding: 0;
+      margin: 0;
+      height: 100%;
+      width: 100%;
+    }
+    #infoDiv {
+      position: absolute;
+      bottom: 15px;
+      right: 0;
+      max-height: 80%;
+      max-width: 300px;
+      background-color: black;
+      padding: 8px;
+      border-top-left-radius: 5px;
+      color: white;
+      opacity: 0.8;
+    }
+#meta {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    width: 20em;
+    height: 5em;
+    z-index: 40;
+    background: #fff;
+    color: #777;
+    padding: 5px;
+    border: 2px solid #666;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    font-family: arial;
+    font-size: 0.9em;
   }
-</style>
-<link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
-<script src="https://js.arcgis.com/4.5/"></script>
-<script>
+  #meta h3 {
+    color: #666;
+    font-size: 1.1em;
+    padding: 0px;
+    margin: 0px;
+    display: inline-block;
+  }
+      </style>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
+  <script src="https://js.arcgis.com/4.5/"></script>
+  <script>
   require([
-    "esri/Map",
     "esri/views/MapView",
-    "esri/Graphic",
-    "esri/widgets/BasemapToggle",
+    "esri/Map",
+    "esri/layers/FeatureLayer",
+    "esri/geometry/Point",
+    "esri/widgets/Legend",
+    "esri/request",
+    "esri/renderers/UniqueValueRenderer",
     "dojo/domReady!"
-  ], function (Map, MapView, Graphic, BasemapToggle) {
+  ], function (MapView, Map, FeatureLayer, Point, Legend, esriRequest, UniqueValueRenderer) {
+
+    var lyr, legend;
+
+    var fields = [
+      {
+        name: "ObjectID",
+        alias: "ObjectID",
+        type: "oid"
+      }, {
+        name: "marker",
+        alias: "Awards",
+        type: "string"
+      }, {
+        name: "title",
+        alias: "title",
+        type: "string"
+      }, {
+        name: "desc",
+        alias: "desc",
+        type: "string"
+      }, {
+        name: "image",
+        alias: "image",
+        type: "string"
+      }
+    ];
+
+    var template = {
+      title: "{title}",
+      content: "<p>{desc}</p>"
+    };
+    //<p>{Image:formatImage}</p>
+
+    formatImage = function (value, key, data) {
+      return "<img src='images/" + value + "' style='width:300px; height: auto;' />";
+    };
 
     var map = new Map({
       basemap: "osm"
     });
 
     var view = new MapView({
-      container: "viewDiv",  // Reference to the scene div created in step 5
-      map: map,  // Reference to the map object created before the scene
-      zoom: 15,  // Sets zoom level based on level of detail (LOD)
-      center: [-97.600682, 30.512881]  // Sets center point of view using longitude,latitude
+      container: "viewDiv",
+      map: map,
+      zoom: 15,
+      center: [-97.600682, 30.512881]  // longitude,latitude
     });
 
-    var basemapToggle = new BasemapToggle({
-      view: view,  // The view that provides access to the map's "streets" basemap
-      nextBasemap: "satellite"  // Allows for toggling to the "hybrid" basemap
-    });
-
-    basemapToggle.on('toggle', function (event) {
-      console.log("current basemap title: ", event.current.title);
-      console.log("previous basemap title: ", event.previous.title);
-    });
-
-    createGraphic = function (x, y, title, desc, img) {
-
-      formatImage = function (value, key, data) {
-        var result = "images/" + value;
-        return "<a href='" + result + "' target=_blank><img src='" + result + "' style='width:300px; height: auto;' /></a>";
-      };
-
-      // Create the graphic
-      var graphic = new Graphic({
-        symbol: {
-          type: "simple-marker",  // autocasts as new SimpleMarkerSymbol()
-          style: "diamond",
-          color: "green",
-          size: "18px",  // pixels
-          outline: {  // autocasts as new SimpleLineSymbol()
-            color: "red",
-            width: 3  // points
+    var renderer = new UniqueValueRenderer({
+      field: "marker",
+      defaultSymbol: {
+          type: "text",  // autocasts as new TextSymbol()
+          color: "#7A003C",
+          text: "\ue61d", // esri-icon-map-pin
+          font: { // autocast as esri/symbols/Font
+            size: 20,
+            family: "CalciteWebCoreIcons"
           }
-        },
-        popupTemplate: {
-          title: "{Title}",
-          content: "<p>{Desc}</p><p>{Image:formatImage}</p>"
-        },
-        geometry: {
-          type: "point",
-          x: x,
-          y: y
-        },
-        attributes: {
-          Title: title,
-          Desc: desc,
-          Image: img
+      }
+    });
+    renderer.addUniqueValueInfo({
+      value: "2017 Winner",
+      symbol: {
+        type: "text",  // autocasts as new TextSymbol()
+        color: "#77D700",
+        text: "\uD83C\uDFC5",
+        font: { // autocast as esri/symbols/Font
+          size: 20,
+          family: "CalciteWebCoreIcons"
         }
-      });
+      }
+    });
+    renderer.addUniqueValueInfo({
+      value: "Hall of Fame",
+      symbol: {
+        type: "text",  // autocasts as new TextSymbol()
+        color: "#77D700",
+        text: "\uD83C\uDFC6", // esri-icon-map-pin
+        font: { // autocast as esri/symbols/Font
+          size: 20,
+          family: "CalciteWebCoreIcons"
+        }
+      }
+    });
 
-      return graphic;
+    view.then(function () {
+      getData()
+        .then(createGraphics) // then send it to the createGraphics() method
+        .then(createLayer) // when graphics are created, create the layer
+        .then(createLegend) // when layer is created, create the legend
+        .otherwise(errback);
+    });
+
+    function getData() {
+      var url = 'data.json';
+      return esriRequest(url, {
+        responseType: "json"
+      });
     }
 
-    var graphic = createGraphic(-97.605682, 30.507881, "123 Main St", "This is the best light display you can image. The Griswold family impresses every year.", "sample.jpg");
+    function createGraphics(response) {
+      // raw GeoJSON data
+      var geoJson = response.data;
+      // Create an array of Graphics from each GeoJSON feature
+      return geoJson.features.map(function (feature, i) {
+        return {
+          geometry: new Point({
+            x: feature.geometry.coordinates[0],
+            y: feature.geometry.coordinates[1]
+          }),
+          attributes: {
+            marker: feature.marker,
+            title: feature.title,
+            desc: feature.desc,
+            image: feature.img
+          }
+        }
+      });
+    }
 
-    // Add the graphic to the view's default graphics view
-    // If adding multiple graphics, use addMany and pass in the array of graphics.
-    view.graphics.add(graphic);
+    function createLayer(graphics) {
+      lyr = new FeatureLayer({
+        source: graphics,
+        fields: fields,
+        objectIdField: "ObjectID",
+        geometryType: "point",
+        spatialReference: { wkid: 4326 },
+        popupTemplate: template,
+        renderer: renderer
 
-    view.ui.add(basemapToggle, "top-right");
+      });
+      map.add(lyr);
+      return lyr;
+    }
+
+    function createLegend(layer) {
+      // if the legend already exists, then update it with the new layer
+      if (legend) {
+        legend.layerInfos = [{
+          layer: layer,
+          title: "Awards"
+        }];
+      } else {
+        legend = new Legend({
+          view: view,
+          layerInfos: [
+            {
+              layer: layer,
+              title: "Display"
+            }]
+        }, "infoDiv");
+      }
+    }
+    //<p>{Desc}</p><p>{Image:formatImage}</p>
+
+    function errback(err) {
+      console.error(err);
+    }
 
   });
+
+
 
 </script>
 </head>
 
 <body>
   <div id="viewDiv"></div>
-</body>
+  <div id="infoDiv">
+    <h2>Forest Creek Lights</h2>
+    2017 Holiday light displays
+  </div>
+<div id="meta">
+      <h3>Forest Creek Events Planning Committee</h3>
+      <br>
+      We hope this map will help you find all the christmas lights. 
+    </div>
+    </body>
 
 </html>
