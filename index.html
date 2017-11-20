@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -11,21 +12,35 @@
       height: 100%;
       width: 100%;
     }
-    #infoDiv {
+    #legendContainer {
       position: absolute;
       bottom: 15px;
       right: 0;
       max-height: 80%;
       max-width: 300px;
-      background-color: black;
       padding: 8px;
       border-top-left-radius: 5px;
-      color: white;
-      opacity: 0.8;
     }
+    #legendContainer, #legend {
+      background-color: black;
+      color: white;
+      opacity: 0.8;      
+    }
+  .closeButton
+  {
+      display:block;
+      position:absolute;
+      top:-15px;
+      left: -15px;
+      background-color: #ffffff;
+      border: 2px solid #666;
+      padding: 3px;
+      border-radius: 20px;
+      cursor: pointer;
+  }
   #meta {
     position: absolute;
-    left: 10px;
+    left: 15px;
     bottom: 10px;
     width: 15em;
     height: 10em;
@@ -45,78 +60,68 @@
     margin: 0px;
     display: inline-block;
   }
-  .closeButton
-  {
-      display:block;
-      position:absolute;
-      top:-10px;
-      left: 10px;
-      background-color: #ffffff;
-      border: 2px solid #666;
-      padding: 3px;
-      border-radius: 20px;
-      cursor: pointer;
-  }
       </style>
-  <link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
-  <script src="https://js.arcgis.com/4.5/"></script>
-  <script>
-  require([
-    "esri/views/MapView",
-    "esri/Map",
-    "esri/layers/FeatureLayer",
-    "esri/geometry/Point",
-    "esri/widgets/Legend",
-    "esri/request",
-    "esri/renderers/UniqueValueRenderer",
-    "dojo/domReady!"
-  ], function (MapView, Map, FeatureLayer, Point, Legend, esriRequest, UniqueValueRenderer) {
+<link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
+<script src="https://js.arcgis.com/4.5/"></script>
+<script>
+    require([
+      "esri/views/MapView",
+      "esri/Map",
+      "esri/layers/FeatureLayer",
+      "esri/geometry/Point",
+      "esri/widgets/Legend",
+      "esri/request",
+      "esri/renderers/UniqueValueRenderer",
+      "dojo/domReady!"
+    ], function (MapView, Map, FeatureLayer, Point, Legend, esriRequest, UniqueValueRenderer) {
 
-    var lyr, legend;
+      var lyr, legend;
 
-    var fields = [
-      {
-        name: "ObjectID",
-        alias: "ObjectID",
-        type: "oid"
-      }, {
-        name: "marker",
-        alias: "Awards",
-        type: "string"
-      }, {
-        name: "title",
-        alias: "title",
-        type: "string"
-      }, {
-        name: "desc",
-        alias: "desc",
-        type: "string"
-      }, {
-        name: "image",
-        alias: "image",
-        type: "string"
-      }
-    ];
+      var fields = [
+        {
+          name: "ObjectID",
+          alias: "ObjectID",
+          type: "oid"
+        }, {
+          name: "marker",
+          alias: "Awards",
+          type: "string"
+        }, {
+          name: "title",
+          alias: "title",
+          type: "string"
+        }, {
+          name: "desc",
+          alias: "desc",
+          type: "string"
+        }, {
+          name: "image",
+          alias: "image",
+          type: "string"
+        }
+      ];
 
-    var template = {
-      title: "{title}",
-      content: "<p><img src='images/{image}' style='float: right; width:150px; height: auto;' />{desc}</p>"
-    };
+      var template = {
+        title: "{title}",
+        content: "<p><img src='images/{image}' style='float: right; width:150px; height: auto;' />{desc}</p>"
+      };
 
-    var map = new Map({
-      basemap: "osm"
-    });
+      var map = new Map({
+        basemap: "osm"
+      });
 
-    var view = new MapView({
-      container: "viewDiv",
-      map: map,
-      zoom: 15,
-      center: [-97.600682, 30.512881]  // longitude,latitude
-    });
-
-    var renderer = new UniqueValueRenderer({
-      field: "marker",
-      defaultSymbol: {
+      var view = new MapView({
+        container: "viewDiv",
+        map: map,
+        zoom: 15,
+        center: [-97.600682, 30.512881]  // longitude,latitude
+      });
+      view.popup.dockOptions = {
+        buttonEnabled: false,
+      };
+      var renderer = new UniqueValueRenderer({
+        field: "marker",
+        defaultSymbol: {
           type: "text",  // autocasts as new TextSymbol()
           color: "#7A003C",
           text: "\ue61d", // esri-icon-map-pin
@@ -124,148 +129,154 @@
             size: 20,
             family: "CalciteWebCoreIcons"
           }
-      }
-    });
-    renderer.addUniqueValueInfo({
-      value: "2017 Winner",
-      symbol: {
-        type: "text",  // autocasts as new TextSymbol()
-        color: "#77D700",
-        text: "\uD83C\uDFC5",
-        font: { // autocast as esri/symbols/Font
-          size: 20,
-          family: "CalciteWebCoreIcons"
         }
-      }
-    });
-    renderer.addUniqueValueInfo({
-      value: "Hall of Fame",
-      symbol: {
-        type: "text",  // autocasts as new TextSymbol()
-        color: "#77D700",
-        text: "\uD83C\uDFC6", // esri-icon-map-pin
-        font: { // autocast as esri/symbols/Font
-          size: 20,
-          family: "CalciteWebCoreIcons"
-        }
-      }
-    });
-
-    view.then(function () {
-      view.on("pointer-move", function(evt) {
-            var screenPoint = {
-              x: evt.x,
-              y: evt.y
-            };
-            view.hitTest(screenPoint)
-              .then(function(response) {
-                changeCursor(response);
-              });      
-        });
-      //close the dialog when the mouse leaves the highlight graphic
-      getData()
-        .then(createGraphics) // then send it to the createGraphics() method
-        .then(createLayer) // when graphics are created, create the layer
-        .then(createLegend) // when layer is created, create the legend
-        .otherwise(errback);
-    });
-
-    function getData() {
-      var url = 'data.json';
-      return esriRequest(url, {
-        responseType: "json"
       });
-    }
-
-    function createGraphics(response) {
-      // raw GeoJSON data
-      var geoJson = response.data;
-      // Create an array of Graphics from each GeoJSON feature
-      return geoJson.features.map(function (feature, i) {
-        return {
-          geometry: new Point({
-            x: feature.geometry.coordinates[0],
-            y: feature.geometry.coordinates[1]
-          }),
-          attributes: {
-            marker: feature.marker,
-            title: feature.title,
-            desc: feature.desc,
-            image: feature.image
+      renderer.addUniqueValueInfo({
+        value: "2017 Winner",
+        symbol: {
+          type: "text",  // autocasts as new TextSymbol()
+          color: "#77D700",
+          text: "\uD83C\uDFC5",
+          font: { // autocast as esri/symbols/Font
+            size: 20,
+            family: "CalciteWebCoreIcons"
           }
         }
       });
-    }
-
-    function createLayer(graphics) {
-      lyr = new FeatureLayer({
-        source: graphics,
-        fields: fields,
-        objectIdField: "ObjectID",
-        geometryType: "point",
-        spatialReference: { wkid: 4326 },
-        popupTemplate: template,
-        renderer: renderer
-
+      renderer.addUniqueValueInfo({
+        value: "Hall of Fame",
+        symbol: {
+          type: "text",  // autocasts as new TextSymbol()
+          color: "#77D700",
+          text: "\uD83C\uDFC6", // esri-icon-map-pin
+          font: { // autocast as esri/symbols/Font
+            size: 20,
+            family: "CalciteWebCoreIcons"
+          }
+        }
       });
-      map.add(lyr);
-      return lyr;
-    }
 
-function changeCursor(response){
-    if (response.results.length > 0){
-      document.getElementById("viewDiv").style.cursor = "pointer";
-    } else {
-      document.getElementById("viewDiv").style.cursor = "default";
-    }
-  }
+      view.then(function () {
+        view.on("pointer-move", function (evt) {
+          var screenPoint = {
+            x: evt.x,
+            y: evt.y
+          };
+          view.hitTest(screenPoint)
+            .then(function (response) {
+              changeCursor(response);
+            });
+        });
+        //close the dialog when the mouse leaves the highlight graphic
+        getData()
+          .then(createGraphics) // then send it to the createGraphics() method
+          .then(createLayer) // when graphics are created, create the layer
+          .then(createLegend) // when layer is created, create the legend
+          .otherwise(errback);
+      });
 
-    function createLegend(layer) {
-      // if the legend already exists, then update it with the new layer
-      if (legend) {
-        legend.layerInfos = [{
-          layer: layer,
-          title: "Awards"
-        }];
-      } else {
-        legend = new Legend({
-          view: view,
-          layerInfos: [
-            {
-              layer: layer,
-              title: "Display"
-            }]
-        }, "infoDiv");
+      function getData() {
+        var url = 'data.json';
+        return esriRequest(url, {
+          responseType: "json"
+        });
       }
-    }
-    //<p>{Desc}</p><p>{Image:formatImage}</p>
 
-    function errback(err) {
-      console.error(err);
-    }
+      function createGraphics(response) {
+        // raw GeoJSON data
+        var geoJson = response.data;
+        // Create an array of Graphics from each GeoJSON feature
+        return geoJson.features.map(function (feature, i) {
+          return {
+            geometry: new Point({
+              x: feature.geometry.coordinates[0],
+              y: feature.geometry.coordinates[1]
+            }),
+            attributes: {
+              marker: feature.marker,
+              title: feature.title,
+              desc: feature.desc,
+              image: feature.image
+            }
+          }
+        });
+      }
 
-  });
+      function createLayer(graphics) {
+        lyr = new FeatureLayer({
+          source: graphics,
+          fields: fields,
+          objectIdField: "ObjectID",
+          geometryType: "point",
+          spatialReference: { wkid: 4326 },
+          popupTemplate: template,
+          renderer: renderer
 
-function closeMeta() {
-  document.getElementById('meta').style.visibility='hidden';
-}
+        });
+        map.add(lyr);
+        return lyr;
+      }
 
+      function changeCursor(response) {
+        if (response.results.length > 0) {
+          document.getElementById("viewDiv").style.cursor = "pointer";
+        } else {
+          document.getElementById("viewDiv").style.cursor = "default";
+        }
+      }
 
-</script>
+      function createLegend(layer) {
+        // if the legend already exists, then update it with the new layer
+        if (legend) {
+          legend.layerInfos = [{
+            layer: layer,
+            title: ""
+          }];
+        } else {
+          legend = new Legend({
+            view: view,
+            layerInfos: [{
+                layer: layer,
+                title: ""
+              }]
+          }, "legend");
+        }
+      }
+      //<p>{Desc}</p><p>{Image:formatImage}</p>
+
+      function errback(err) {
+        console.error(err);
+      }
+
+      document.getElementById('legendContainer').onclick = function() {        
+        var div = document.getElementById('legend');
+        //div.style.visibility = div.style.visibility == "visible" ? "hidden" : "visible";
+        div.style.display = div.style.display == "block" ? "none" : "block";
+
+      };
+      
+      document.getElementById('closeMeta').onclick = function() {
+        document.getElementById('meta').style.visibility = 'hidden';
+      }
+
+    });
+  </script>
 </head>
-
 <body>
   <div id="viewDiv"></div>
-  <div id="infoDiv">
-    <h2>Forest Creek Lights</h2>
-    2017 Holiday light displays
-  </div>
   <div id="meta">
-    <div onclick="closeMeta();" class="closeButton"><span id="closeIcon" class="esri-icon-close" aria-label="close icon"></span></div>
+    <div id="closeMeta" class="closeButton"><span id="closeIcon" class="esri-icon-close" aria-label="close icon"></span></div>
     <h3>Forest Creek Events Planning Committee</h3>
-    <br />
-    We hope this map will help you find all the christmas lights. To add a display to this map, do something. 
+    <br /> We hope this map will help you find all the christmas lights. To add a display to this map, do something.
   </div>
-  </body>
+  <div id="legendOpenButton">
+    <h3>Legend</h3>
+  </div>
+  <div id="legendContainer">
+    <h2>Forest Creek Lights</h2>
+    2017 Holiday light displays    
+    <div id="legend"></div>
+  </div>
+</body>
 
 </html>
