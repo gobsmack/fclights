@@ -25,9 +25,9 @@
     }
   #meta {
     position: absolute;
-    left: 20px;
-    bottom: 20px;
-    width: 20em;
+    left: 10px;
+    bottom: 10px;
+    width: 15em;
     height: 10em;
     z-index: 40;
     background: #fff;
@@ -50,11 +50,11 @@
       display:block;
       position:absolute;
       top:-10px;
-      right:-10px;
+      left: 10px;
       background-color: #ffffff;
       border: 2px solid #666;
       padding: 3px;
-      border-radius: 15px;
+      border-radius: 20px;
       cursor: pointer;
   }
       </style>
@@ -157,13 +157,9 @@
               x: evt.x,
               y: evt.y
             };
-
-            // the hitTest() checks to see if any graphics in the view
-            // intersect the given screen x, y coordinates
             view.hitTest(screenPoint)
-              .then( function(response){
+              .then(function(response) {
                 changeCursor(response);
-                //getGraphics(response);
               });      
         });
       //close the dialog when the mouse leaves the highlight graphic
