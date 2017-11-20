@@ -9,12 +9,12 @@
         "image": "sample.jpg"
     }, {
         "geometry": {
-            "coordinates": [-97.605682, 30.507881]
+            "coordinates": [-97.610956, 30.512418]
         },
         "marker": "Hall of Fame",
-        "title": "123 Main St",
-        "desc": "This is the best light display you can image. The Griswold family impresses every year.",
-        "image": "sample.jpg"
+        "title": "3716 Royal Port Rush Drive",
+        "desc": "A sledding hill with real snow? You betcha.",
+        "image": "3716rpr.jpg"
     }, {
         "geometry": {
             "coordinates": [-97.606682, 30.508881]

@@ -23,19 +23,17 @@
       color: white;
       opacity: 0.8;
     }
-#meta {
+  #meta {
     position: absolute;
     left: 20px;
     bottom: 20px;
     width: 20em;
-    height: 5em;
+    height: 10em;
     z-index: 40;
     background: #fff;
     color: #777;
     padding: 5px;
     border: 2px solid #666;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
     border-radius: 5px;
     font-family: arial;
     font-size: 0.9em;
@@ -46,6 +44,18 @@
     padding: 0px;
     margin: 0px;
     display: inline-block;
+  }
+  .closeButton
+  {
+      display:block;
+      position:absolute;
+      top:-10px;
+      right:-10px;
+      background-color: #ffffff;
+      border: 2px solid #666;
+      padding: 3px;
+      border-radius: 15px;
+      cursor: pointer;
   }
       </style>
   <link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
@@ -90,12 +100,7 @@
 
     var template = {
       title: "{title}",
-      content: "<p>{desc}</p>"
-    };
-    //<p>{Image:formatImage}</p>
-
-    formatImage = function (value, key, data) {
-      return "<img src='images/" + value + "' style='width:300px; height: auto;' />";
+      content: "<p><img src='images/{image}' style='float: right; width:150px; height: auto;' />{desc}</p>"
     };
 
     var map = new Map({
@@ -147,6 +152,21 @@
     });
 
     view.then(function () {
+      view.on("pointer-move", function(evt) {
+            var screenPoint = {
+              x: evt.x,
+              y: evt.y
+            };
+
+            // the hitTest() checks to see if any graphics in the view
+            // intersect the given screen x, y coordinates
+            view.hitTest(screenPoint)
+              .then( function(response){
+                changeCursor(response);
+                //getGraphics(response);
+              });      
+        });
+      //close the dialog when the mouse leaves the highlight graphic
       getData()
         .then(createGraphics) // then send it to the createGraphics() method
         .then(createLayer) // when graphics are created, create the layer
@@ -175,7 +195,7 @@
             marker: feature.marker,
             title: feature.title,
             desc: feature.desc,
-            image: feature.img
+            image: feature.image
           }
         }
       });
@@ -195,6 +215,14 @@
       map.add(lyr);
       return lyr;
     }
+
+function changeCursor(response){
+    if (response.results.length > 0){
+      document.getElementById("viewDiv").style.cursor = "pointer";
+    } else {
+      document.getElementById("viewDiv").style.cursor = "default";
+    }
+  }
 
     function createLegend(layer) {
       // if the legend already exists, then update it with the new layer
@@ -222,6 +250,9 @@
 
   });
 
+function closeMeta() {
+  document.getElementById('meta').style.visibility='hidden';
+}
 
 
 </script>
@@ -233,11 +264,12 @@
     <h2>Forest Creek Lights</h2>
     2017 Holiday light displays
   </div>
-<div id="meta">
-      <h3>Forest Creek Events Planning Committee</h3>
-      <br>
-      We hope this map will help you find all the christmas lights. 
-    </div>
-    </body>
+  <div id="meta">
+    <div onclick="closeMeta();" class="closeButton"><span id="closeIcon" class="esri-icon-close" aria-label="close icon"></span></div>
+    <h3>Forest Creek Events Planning Committee</h3>
+    <br />
+    We hope this map will help you find all the christmas lights. To add a display to this map, do something. 
+  </div>
+  </body>
 
 </html>
