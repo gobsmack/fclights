@@ -12,6 +12,7 @@
       height: 100%;
       width: 100%;
     }
+    /*
     #legendContainer {
       position: absolute;
       bottom: 15px;
@@ -60,6 +61,7 @@
     margin: 0px;
     display: inline-block;
   }
+  */
       </style>
 <link rel="stylesheet" href="https://js.arcgis.com/4.5/esri/css/main.css">
 <script src="https://js.arcgis.com/4.5/"></script>
@@ -103,7 +105,8 @@
 
       var template = {
         title: "{title}",
-        content: "<p><img src='images/{image}' style='float: right; width:150px; height: auto;' />{desc}</p>"
+        //content: "<p><img src='images/{image}' style='float: right; width:150px; height: auto;' />{desc}</p>"
+        content: "<p>{desc}</p>"
       };
 
       var map = new Map({
@@ -171,7 +174,7 @@
         getData()
           .then(createGraphics) // then send it to the createGraphics() method
           .then(createLayer) // when graphics are created, create the layer
-          .then(createLegend) // when layer is created, create the legend
+          //.then(createLegend) // when layer is created, create the legend
           .otherwise(errback);
       });
 
@@ -225,6 +228,11 @@
         }
       }
 
+      function errback(err) {
+        console.error(err);
+      }
+
+      /*
       function createLegend(layer) {
         // if the legend already exists, then update it with the new layer
         if (legend) {
@@ -244,10 +252,6 @@
       }
       //<p>{Desc}</p><p>{Image:formatImage}</p>
 
-      function errback(err) {
-        console.error(err);
-      }
-
       document.getElementById('legendContainer').onclick = function() {        
         var div = document.getElementById('legend');
         //div.style.visibility = div.style.visibility == "visible" ? "hidden" : "visible";
@@ -258,12 +262,13 @@
       document.getElementById('closeMeta').onclick = function() {
         document.getElementById('meta').style.visibility = 'hidden';
       }
-
+      */
     });
   </script>
 </head>
 <body>
   <div id="viewDiv"></div>
+  <!--
   <div id="meta">
     <div id="closeMeta" class="closeButton"><span id="closeIcon" class="esri-icon-close" aria-label="close icon"></span></div>
     <h3>Forest Creek Events Planning Committee</h3>
@@ -277,6 +282,6 @@
     2017 Holiday light displays    
     <div id="legend"></div>
   </div>
+  -->
 </body>
-
 </html>
