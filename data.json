@@ -1,26 +1,122 @@
 {
     "features": [{
         "geometry": {
-            "coordinates": [-97.605682, 30.507881]
+            "coordinates": [-97.597893, 30.509799]
+        },
+        "marker": "Hall of Fame",
+        "title": "Putters Cove",
+        "desc": "Hall of Fame, Putters Cove."
+    }, {
+        "geometry": {
+            "coordinates": [-97.608457, 30.509973]
+        },
+        "marker": "Hall of Fame",
+        "title": "Bent Brook",
+        "desc": "Hall of Fame, Bent Brook."
+    }, {
+        "geometry": {
+            "coordinates": [-97.604652, 30.511291]
+        },
+        "marker": "Hall of Fame",
+        "title": "Turnberry/Long Cove",
+        "desc": "Hall of Fame, Turnberry/Long Cove. Entrance off of Forest Creek Drive."
+    }, {
+        "geometry": {
+            "coordinates": [-97.609593, 30.513153]
+        },
+        "marker": "Hall of Fame",
+        "title": "2036 St Andrews",
+        "desc": "Hall of Fame, 2036 St Andrews."
+    }, {
+        "geometry": {
+            "coordinates": [-97.611105, 30.516831]
+        },
+        "marker": "Hall of Fame",
+        "title": "3802 Trevino",
+        "desc": "Hall of Fame, 3802 Trevino."
+    }, {
+        "geometry": {
+            "coordinates": [-97.593120, 30.513446]
         },
         "marker": "2017 Winner",
-        "title": "123 Main St",
-        "desc": "This is the best light display you can image. The Griswold family impresses every year.",
-        "image": "sample.jpg"
+        "title": "4014 Harvey Penick Drive",
+        "desc": "2017 Winner, Traditional, 4014 Harvey Penick Drive."
+    }, {
+        "geometry": {
+            "coordinates": [-97.590780, 30.510727]
+        },
+        "marker": "2017 Winner",
+        "title": "3801 Quail Lodge",
+        "desc": "2017 Winner, Techno, 3801 Quail Lodge."
+    }, {
+        "geometry": {
+            "coordinates": [-97.597348, 30.514596]
+        },
+        "marker": "2017 Winner",
+        "title": "3201 Bayhill",
+        "desc": "2017 Winner, Best Theme, 3201 Bayhill."
+    }, {
+        "geometry": {
+            "coordinates": [-97.591942, 30.517890]
+        },
+        "marker": "2017 Winner",
+        "title": "3511 Ogrin Cove",
+        "desc": "2017 Winner, Dr Seuss, 3511 Ogrin Cove."
+    }, {
+        "geometry": {
+            "coordinates": [-97.595638, 30.514776]
+        },
+        "marker": "2017 Winner",
+        "title": "3403 Snead",
+        "desc": "2017 Winner, Griswald, 3403 Snead."
     }, {
         "geometry": {
             "coordinates": [-97.610956, 30.512418]
         },
-        "marker": "Hall of Fame",
-        "title": "3716 Royal Port Rush Drive",
-        "desc": "A sledding hill with real snow? You betcha.",
-        "image": "3716rpr.jpg"
+        "marker": "2017 Winner",
+        "title": "3716 Royal Port Rush",
+        "desc": "2017 Winner, Kids' Favorite, 3716 Royal Port Rush."
     }, {
         "geometry": {
-            "coordinates": [-97.606682, 30.508881]
+            "coordinates": [-97.610771, 30.511331]
+        },
+        "marker": "2017 Winner",
+        "title": "Royal Troon Cove",
+        "desc": "2017 Winner, Best Group, Royal Troon Cove."
+    }, {
+        "geometry": {
+            "coordinates": [-97.608495, 30.510178]
+        },
+        "marker": "2017 Winner",
+        "title": "3806 Bent Brook Drive",
+        "desc": "2017 Winner, WOW, 3806 Bent Brook Drive."
+    }, {
+        "geometry": {
+            "coordinates": [-97.593683, 30.517048]
+        },
+        "marker": "2017 Winner",
+        "title": "3400 Stadler",
+        "desc": "2017 Winner, Special Recognition, 3400 Stadler."
+    }, {
+        "geometry": {
+            "coordinates": [-97.609542, 30.512062]
+        },
+        "marker": "2017 Winner",
+        "title": "2025 St Andrews",
+        "desc": "2017 Winner, Honorable Mention, 2025 St Andrews."
+    }, {
+        "geometry": {
+            "coordinates": [-97.592689, 30.514059]
         },
         "marker": "",
-        "title": "456 Some St",
-        "desc": "This is just a regular display with no photo."
+        "title": "1501 Pinehurst",
+        "desc": "1501 Pinehurst."
+    }, {
+        "geometry": {
+            "coordinates": [-97.594757, 30.513225]
+        },
+        "marker": "",
+        "title": "2145 Hilton Head",
+        "desc": "2145 Hilton Head."
     }]
 }
